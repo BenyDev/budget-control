@@ -53,14 +53,17 @@ public class AuthServiceImpl implements AuthService {
     @Value("${password.reset.link}")
     private String resetLink;
 
+    @Value("${database.initial.data.role-customer}")
+    private String roleCustomer;
+
     @Override
     public Response<String> register(RegistrationRequest request) {
         List<Role> roles;
 
         if(request.getRoles()==null || request.getRoles().isEmpty()){
             //DEFAULT TO CUSTOMER
-            Role role = roleRepo.findByName("CUSTOMER")
-                    .orElseThrow(() -> new NotFoudException("CUSTOMER role not found"));
+            Role role = roleRepo.findByName(roleCustomer)
+                    .orElseThrow(() -> new NotFoudException(roleCustomer + " role not found"));
             roles = Collections.singletonList(role);
 
         }else {
@@ -93,7 +96,7 @@ public class AuthServiceImpl implements AuthService {
 
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .recipient(savedUser.getEmail())
-                .subject("Welcome to Benedykt Bank :)")
+                .subject("Welcome to Budget Control Application :)")
                 .templateName("welcome")
                 .templateVariables(vars)
                 .build();
@@ -101,17 +104,17 @@ public class AuthServiceImpl implements AuthService {
         notificationService.sendEmail(notificationDTO, savedUser);
 
         //SEND ACCOUNT CREATION/DETAILS EMAIL
-        Map<String,Object> accountVars = new HashMap<>();
-        accountVars.put("name",savedUser.getFirstName());
-
-
-        NotificationDTO accountCreatedEmail = NotificationDTO.builder()
-                .recipient(savedUser.getEmail())
-                .subject("Your new Bank Account has been created")
-                .templateName("account-created")
-                .templateVariables(accountVars)
-                .build();
-        notificationService.sendEmail(accountCreatedEmail, savedUser);
+//        Map<String,Object> accountVars = new HashMap<>();
+//        accountVars.put("name",savedUser.getFirstName());
+//
+//
+//        NotificationDTO accountCreatedEmail = NotificationDTO.builder()
+//                .recipient(savedUser.getEmail())
+//                .subject("Your new Bank Account has been created")
+//                .templateName("account-created")
+//                .templateVariables(accountVars)
+//                .build();
+//        notificationService.sendEmail(accountCreatedEmail, savedUser);
 
         return Response.<String>builder()
                 .statusCode(HttpStatus.OK.value())

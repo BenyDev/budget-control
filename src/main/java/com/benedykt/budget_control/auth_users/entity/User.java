@@ -31,7 +31,6 @@ public class User {
     @NotBlank
     private String lastName;
 
-
     @Email
     @NotBlank(message = "Email is required")
     @Column(unique = true, nullable = false)

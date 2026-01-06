@@ -13,7 +13,7 @@ public class RegistrationRequest {
     @NotBlank(message = "FirstName is required")
     private String firstName;
 
-    @NotBlank
+    @NotBlank(message = "LastName is required")
     private String lastName;
 
     @Email
