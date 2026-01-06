@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Data
 @Builder
-@Table(name = "user")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
@@ -31,7 +31,6 @@ public class User {
     @NotBlank
     private String lastName;
 
-    private String phoneNumber;
 
     @Email
     @NotBlank(message = "Email is required")
@@ -40,8 +39,6 @@ public class User {
 
     @NotBlank
     private String password;
-
-//    private String profilePictureUrl;
 
 
     private boolean active = true;
@@ -54,8 +51,6 @@ public class User {
     )
     private List<Role> roles;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-//    private List<Account> accounts;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

@@ -1,33 +1,29 @@
-package com.benedykt.budget_control.budget_details.entity;
+package com.benedykt.budget_control.user_categories.entity;
 
-import com.benedykt.budget_control.budget.entity.Budget;
+import com.benedykt.budget_control.auth_users.entity.User;
 import com.benedykt.budget_control.category.entity.Category;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "budget_details")
-public class BudgetDetail {
+@Table(name = "user_categories")
+public class Subcategory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal minExpense;
-    private BigDecimal maxExpense;
-    private BigDecimal priorityExpense;
+    private String name;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "budget_id",  nullable = false)
-    private Budget budget;
+    @JoinColumn(name = "user_id")
+    private User owner;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -35,4 +31,5 @@ public class BudgetDetail {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    
 }

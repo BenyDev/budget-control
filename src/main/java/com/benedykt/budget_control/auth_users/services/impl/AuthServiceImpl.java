@@ -46,7 +46,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final NotificationService notificationService;
-//    private final AccountService accountService;
 
     private final CodeGenerator codeGenerator;
     private final PasswordResetCodeRepo  passwordResetCodeRepo;
@@ -54,77 +53,72 @@ public class AuthServiceImpl implements AuthService {
     @Value("${password.reset.link}")
     private String resetLink;
 
-//    @Override
-//    public Response<String> register(RegistrationRequest request) {
-//        List<Role> roles;
-//
-//        if(request.getRoles()==null || request.getRoles().isEmpty()){
-//            //DEFAULT TO CUSTOMER
-//            Role role = roleRepo.findByName("CUSTOMER")
-//                    .orElseThrow(() -> new NotFoudException("CUSTOMER role not found"));
-//            roles = Collections.singletonList(role);
-//
-//        }else {
-//            roles = request.getRoles().stream()
-//                    .map(roleName -> roleRepo.findByName(roleName)
-//                            .orElseThrow(() -> new NotFoudException("ROLE NOT FOUND" + roleName))).toList();
-//
-//        }
-//
-//        if(userRepo.findByEmail(request.getEmail()).isPresent()){
-//            throw new BadRequestException("Email already exists");
-//        }
-//        User user = User.builder()
-//                .firstName(request.getFirstName())
-//                .lastName(request.getLastName())
-//                .email(request.getEmail())
-//                .phoneNumber((request.getPhoneNumber()))
-//                .password(passwordEncoder.encode(request.getPassword()))
-//                .roles(roles)
-//                .active(true)
-//                .build();
-//
-//        User savedUser = userRepo.save(user);
-//
-//        //Create Account for the user
-//        Account savedAccount = accountService.createAccount(AccountType.SAVINGS, savedUser);
-//
-//        //TODO SEND A WELCOME EMAIL OF THE USER AND ACCOUNT DETAILS TO THE USERS EMAIL
-//
-//        //SEND WELCOME EMAIL
-//        Map<String,Object> vars = new HashMap<>();
-//        vars.put("name",savedUser.getFirstName());
-//
-//        NotificationDTO notificationDTO = NotificationDTO.builder()
-//                .recipient(savedUser.getEmail())
-//                .subject("Welcome to Benedykt Bank :)")
-//                .templateName("welcome")
-//                .templateVariables(vars)
-//                .build();
-//
-//        notificationService.sendEmail(notificationDTO, savedUser);
-//
-//        //SEND ACCOUNT CREATION/DETAILS EMAIL
-//        Map<String,Object> accountVars = new HashMap<>();
-//        accountVars.put("name",savedUser.getFirstName());
-//        accountVars.put("accountNumber",savedAccount.getAccountNumber());
-//        accountVars.put("accountType",AccountType.SAVINGS.name());
-//        accountVars.put("currency", Currency.USD);
-//
-//        NotificationDTO accountCreatedEmail = NotificationDTO.builder()
-//                .recipient(savedUser.getEmail())
-//                .subject("Your new Bank Account has been created")
-//                .templateName("account-created")
-//                .templateVariables(accountVars)
-//                .build();
-//        notificationService.sendEmail(accountCreatedEmail, savedUser);
-//
-//        return Response.<String>builder()
-//                .statusCode(HttpStatus.OK.value())
-//                .message("Your account has benn created successfully")
-//                .data("Email of you account details has beed sent to your email. Your account number is: " + savedAccount.getAccountNumber())
-//                .build();
-//    }
+    @Override
+    public Response<String> register(RegistrationRequest request) {
+        List<Role> roles;
+
+        if(request.getRoles()==null || request.getRoles().isEmpty()){
+            //DEFAULT TO CUSTOMER
+            Role role = roleRepo.findByName("CUSTOMER")
+                    .orElseThrow(() -> new NotFoudException("CUSTOMER role not found"));
+            roles = Collections.singletonList(role);
+
+        }else {
+            roles = request.getRoles().stream()
+                    .map(roleName -> roleRepo.findByName(roleName)
+                            .orElseThrow(() -> new NotFoudException("ROLE NOT FOUND" + roleName))).toList();
+
+        }
+
+        if(userRepo.findByEmail(request.getEmail()).isPresent()){
+            throw new BadRequestException("Email already exists");
+        }
+        User user = User.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .roles(roles)
+                .active(true)
+                .build();
+
+        User savedUser = userRepo.save(user);
+
+
+        //TODO SEND A WELCOME EMAIL OF THE USER AND ACCOUNT DETAILS TO THE USERS EMAIL
+
+        //SEND WELCOME EMAIL
+        Map<String,Object> vars = new HashMap<>();
+        vars.put("name",savedUser.getFirstName());
+
+        NotificationDTO notificationDTO = NotificationDTO.builder()
+                .recipient(savedUser.getEmail())
+                .subject("Welcome to Benedykt Bank :)")
+                .templateName("welcome")
+                .templateVariables(vars)
+                .build();
+
+        notificationService.sendEmail(notificationDTO, savedUser);
+
+        //SEND ACCOUNT CREATION/DETAILS EMAIL
+        Map<String,Object> accountVars = new HashMap<>();
+        accountVars.put("name",savedUser.getFirstName());
+
+
+        NotificationDTO accountCreatedEmail = NotificationDTO.builder()
+                .recipient(savedUser.getEmail())
+                .subject("Your new Bank Account has been created")
+                .templateName("account-created")
+                .templateVariables(accountVars)
+                .build();
+        notificationService.sendEmail(accountCreatedEmail, savedUser);
+
+        return Response.<String>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Your account has benn created successfully")
+                .data("Email of you account details has beed sent to your email.")
+                .build();
+    }
 
     @Override
     public Response<LoginResponse> login(LoginRequest loginRequest) {

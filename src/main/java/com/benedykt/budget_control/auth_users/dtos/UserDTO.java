@@ -1,11 +1,9 @@
 package com.benedykt.budget_control.auth_users.dtos;
 
-//import com.benedykt.budget_control.account.dtos.AccountDTO;
 import com.benedykt.budget_control.role.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -34,7 +32,7 @@ public class UserDTO {
     @NotBlank
     private String lastName;
 
-    private String phoneNumber;
+
 
     @Email
     @NotBlank
@@ -43,9 +41,6 @@ public class UserDTO {
 
     @JsonIgnore
     private String password;
-
-    private String profilePictureUrl;
-
 
     private boolean active;
 

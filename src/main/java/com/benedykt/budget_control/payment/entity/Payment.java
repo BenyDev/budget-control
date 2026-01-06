@@ -1,10 +1,8 @@
 package com.benedykt.budget_control.payment.entity;
 
+import com.benedykt.budget_control.auth_users.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -23,4 +21,10 @@ public class Payment {
     private String name;
 
     private LocalDateTime paymentDate;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id")
+    private User payer;
 }

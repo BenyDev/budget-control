@@ -16,8 +16,6 @@ public class RegistrationRequest {
     @NotBlank
     private String lastName;
 
-    private String phoneNumber;
-
     @Email
     @NotBlank(message = "Email is required")
     private String email;
@@ -26,4 +24,6 @@ public class RegistrationRequest {
 
     @NotBlank(message = "Password is required")
     private String password;
+
+
 }

@@ -1,6 +1,7 @@
 package com.benedykt.budget_control.budget.entity;
 
 import com.benedykt.budget_control.auth_users.entity.User;
+import com.benedykt.budget_control.category.entity.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,4 +36,12 @@ public class Budget {
     @ManyToOne(fetch = FetchType.LAZY,  optional = false)
     @JoinColumn(name = "user_id",  nullable = false)
     private User user;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY,  optional = false)
+    @JoinColumn(name = "category_id",  nullable = false)
+    private Category category;
+
+
 }
