@@ -1,0 +1,43 @@
+spring:
+  profiles:
+    active: dev
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USER:}
+    password: ${EMAIL_PASS:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jpa:
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${PORT:8080}
+
+logging:
+  level:
+    org.springframework.security: INFO
+
+app:
+  security:
+    private-key-location: ${JWT_PRIVATE_KEY_LOCATION}
+    public-key-location: ${JWT_PUBLIC_KEY_LOCATION}
+    access-expiration: ${JWT_ACCESS_EXPIRATION_TIME:900000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+  frontend:
+    password-reset-url: ${PASSWORD_RESET_URL:http://localhost:3000/reset-password?code=}
+
+database:
+  initial:
+    data:
+      role-customer: ${DB_VAR_ROLE_CUSTOMER:USER_BASIC}
+      role-admin: ${DB_VAR_ROLE_ADMIN:ADMIN}

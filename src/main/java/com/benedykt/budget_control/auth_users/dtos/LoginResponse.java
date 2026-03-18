@@ -1,0 +1,16 @@
+package com.benedykt.budget_control.auth_users.dtos;
+
+import lombok.Builder;
+import lombok.Data;
+
+import java.util.List;
+
+@Data
+@Builder
+public class LoginResponse {
+
+    private Long userId;
+    private String email;
+    private String accessToken;
+    private List<String> roles;
+}
