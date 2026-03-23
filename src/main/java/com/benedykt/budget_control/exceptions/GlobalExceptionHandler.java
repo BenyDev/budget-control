@@ -21,6 +21,16 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    @ExceptionHandler(CsvImportException.class)
+    public ResponseEntity<Response<?>> handlerCsvImportException(CsvImportException ex){
+        Response<?> response = Response.builder()
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .message(ex.getMessage())
+                .data(ex.getCause().getMessage())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(NotFoudException.class)
     public ResponseEntity<Response<?>> handlerNotFoundException(NotFoudException ex){
