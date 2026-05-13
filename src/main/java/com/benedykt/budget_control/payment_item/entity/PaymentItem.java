@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PaymentItem {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

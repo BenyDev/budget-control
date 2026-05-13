@@ -41,3 +41,8 @@ database:
     data:
       role-customer: ${DB_VAR_ROLE_CUSTOMER:USER_BASIC}
       role-admin: ${DB_VAR_ROLE_ADMIN:ADMIN}
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+  model: gpt-4.1-mini
+  url: https://api.openai.com/v1/chat/completions
