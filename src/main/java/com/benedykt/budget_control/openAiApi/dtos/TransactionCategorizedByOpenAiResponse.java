@@ -1,6 +1,6 @@
 package com.benedykt.budget_control.openAiApi.dtos;
 
-import com.benedykt.budget_control.enums.Category;
+import com.benedykt.budget_control.enums.ECategory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,5 +19,5 @@ public class TransactionCategorizedByOpenAiResponse {
     private String description;
     private String title;
     private BigDecimal amount;
-    private Category category;
+    private ECategory ECategory;
 }

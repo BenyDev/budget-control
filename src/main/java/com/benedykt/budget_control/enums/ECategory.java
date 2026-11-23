@@ -1,6 +1,6 @@
 package com.benedykt.budget_control.enums;
 
-public enum Category {
+public enum ECategory {
 
     SHOPPING,
     HOUSING,

@@ -64,7 +64,7 @@ public class FixedPayment {
     @JoinColumn(name = "subcategory_id", nullable = false )
     private Subcategory subcategory;
 
-    @AssertTrue(message = "FixedPayment must reference exactly one : category or subcategory")
+    @AssertTrue(message = "FixedPayment must reference exactly one : ECategory or subcategory")
     public boolean isCategoryXorSubcategory(){
         return (category != null) ^ (subcategory != null);
     }

@@ -4,6 +4,7 @@ import com.benedykt.budget_control.auth_users.entity.AppUser;
 import com.benedykt.budget_control.auth_users.services.UserService;
 import com.benedykt.budget_control.category.entity.Category;
 import com.benedykt.budget_control.category.repo.CategoryRepo;
+import com.benedykt.budget_control.enums.ECategory;
 import com.benedykt.budget_control.enums.EPaymentMethod;
 import com.benedykt.budget_control.exceptions.NotFoudException;
 import com.benedykt.budget_control.openAiApi.dtos.TransactionCategorizedByOpenAiResponse;
@@ -38,8 +39,8 @@ public class PaymentServiceImpl implements PaymentService {
         List<Payment> payments = new ArrayList<>(categorizedTransaction.size());
         List<PaymentItem> paymentItems = new ArrayList<>(categorizedTransaction.size());
 
-        Category otherCategory = categoryRepo.findByName(com.benedykt.budget_control.enums.Category.OTHER.name())
-                        .orElseThrow(()-> new NotFoudException("Category OTHER not found"));
+        Category otherCategory = categoryRepo.findByName(ECategory.OTHER.name())
+                        .orElseThrow(()-> new NotFoudException("ECategory OTHER not found"));
 
         categorizedTransaction.forEach(p -> {
             Payment payment = Payment.builder()
@@ -52,7 +53,7 @@ public class PaymentServiceImpl implements PaymentService {
             payments.add(payment);
 
 
-            Category itemCategory = categoryRepo.findByName(p.getCategory().name())
+            Category itemCategory = categoryRepo.findByName(p.getECategory().name())
                     .orElse(otherCategory);
 
             PaymentItem paymentItem = PaymentItem.builder()

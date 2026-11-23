@@ -1,7 +1,7 @@
 package com.benedykt.budget_control.openAiApi.Service;
 
 import com.benedykt.budget_control.config.OpenAiProperties;
-import com.benedykt.budget_control.enums.Category;
+import com.benedykt.budget_control.enums.ECategory;
 import com.benedykt.budget_control.imports.mbank.MBankParsedTransaction;
 import com.benedykt.budget_control.openAiApi.dtos.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -224,31 +224,31 @@ public class TransactionCategorizerServiceImpl implements TransactionCategorizer
         }
 
 
-        Map<Integer, Category> categoryByGlobalIndex = new LinkedHashMap<>();
+        Map<Integer, ECategory> categoryByGlobalIndex = new LinkedHashMap<>();
 
         for (CategorizationBatchResult.CategorizationItem item : batchResult.getItems()) {
             if (item.getIndex() == null || item.getCategory() == null) {
-                log.warn("Skipping invalid categorization item in batch {}/{}: index={}, category={}",
+                log.warn("Skipping invalid categorization item in batch {}/{}: index={}, ECategory={}",
                         batchNumber, totalBatches, item.getIndex(), item.getCategory());
                 continue;
             }
 
-            Category parsedCategory;
+            ECategory parsedECategory;
             try {
-                parsedCategory = Category.valueOf(item.getCategory());
+                parsedECategory = ECategory.valueOf(item.getCategory());
             } catch (IllegalArgumentException e) {
-                log.warn("Unknown category '{}' returned by OpenAI for index {}. Falling back to OTHER.",
+                log.warn("Unknown ECategory '{}' returned by OpenAI for index {}. Falling back to OTHER.",
                         item.getCategory(), item.getIndex());
-                parsedCategory = Category.OTHER;
+                parsedECategory = ECategory.OTHER;
             }
 
             if (categoryByGlobalIndex.containsKey(item.getIndex())) {
-                log.warn("Duplicate category for global index {} in batch {}/{}. Keeping the first value.",
+                log.warn("Duplicate ECategory for global index {} in batch {}/{}. Keeping the first value.",
                         item.getIndex(), batchNumber, totalBatches);
                 continue;
             }
 
-            categoryByGlobalIndex.put(item.getIndex(), parsedCategory);
+            categoryByGlobalIndex.put(item.getIndex(), parsedECategory);
         }
 
         List<TransactionCategorizedByOpenAiResponse> categorized = new ArrayList<>();
@@ -257,10 +257,11 @@ public class TransactionCategorizerServiceImpl implements TransactionCategorizer
             MBankParsedTransaction tx = batch.get(localIndex);
             int globalIndex = globalStartIndex + localIndex;
 
-            Category category = categoryByGlobalIndex.getOrDefault(globalIndex, Category.OTHER);
+            ECategory ECategory = categoryByGlobalIndex.getOrDefault(globalIndex, com.benedykt.budget_control.enums.ECategory.OTHER);
+
 
             if (!categoryByGlobalIndex.containsKey(globalIndex)) {
-                log.warn("No category returned for global index {}. Falling back to OTHER.", globalIndex);
+                log.warn("No ECategory returned for global index {}. Falling back to OTHER.", globalIndex);
             }
 
             categorized.add(TransactionCategorizedByOpenAiResponse.builder()
@@ -268,7 +269,7 @@ public class TransactionCategorizerServiceImpl implements TransactionCategorizer
                     .description(tx.getDescription())
                     .title(tx.getTitle())
                     .amount(tx.getAmount())
-                    .category(category)
+                    .ECategory(ECategory)
                     .build());
         }
 
@@ -276,7 +277,7 @@ public class TransactionCategorizerServiceImpl implements TransactionCategorizer
     }
 
     private List<String> getCategoryEnumValues(){
-        return Arrays.stream(Category.values()).map(Enum::name).toList();
+        return Arrays.stream(ECategory.values()).map(Enum::name).toList();
     }
 
     private Map<String, Object> buildResponseFormat() {
@@ -289,12 +290,12 @@ public class TransactionCategorizerServiceImpl implements TransactionCategorizer
                                         "type", "object",
                                         "properties", Map.of(
                                                 "index", Map.of("type", "integer"),
-                                                "category", Map.of(
+                                                "ECategory", Map.of(
                                                         "type", "string",
                                                         "enum", getCategoryEnumValues()
                                                 )
                                         ),
-                                        "required", List.of("index", "category"),
+                                        "required", List.of("index", "ECategory"),
                                         "additionalProperties", false
                                 )
                         )
